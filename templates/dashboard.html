@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Rural Bank</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Rural Bank</div>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
+                <a href="{{ url_for('transfer') }}">Transfer</a>
+                <a href="{{ url_for('loans') }}">Loans</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="container">
+            <div class="welcome-section">
+                <h2>Welcome, {{ current_user.username }}!</h2>
+                <p class="account-info">Account Number: {{ current_user.account_number }}</p>
+                <div class="balance-card">
+                    <h3>Current Balance</h3>
+                    <p class="balance">₹{{ "%.2f"|format(current_user.balance) }}</p>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="action-buttons">
+                    <a href="{{ url_for('transfer') }}" class="action-btn">
+                        <img src="{{ url_for('static', filename='images/transfer.png') }}" alt="Transfer">
+                        <span>Send Money</span>
+                    </a>
+                    <a href="{{ url_for('credit') }}" class="action-btn">
+                        <img src="{{ url_for('static', filename='images/credit.png') }}" alt="Credit">
+                        <span>Add Money</span>
+                    </a>
+                    <a href="{{ url_for('debit') }}" class="action-btn">
+                        <img src="{{ url_for('static', filename='images/debit.png') }}" alt="Debit">
+                        <span>Debit Money</span>
+                    </a>
+                    <a href="{{ url_for('loans') }}" class="action-btn">
+                        <img src="{{ url_for('static', filename='images/loan.png') }}" alt="Loan">
+                        <span>Apply for Loan</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="recent-transactions">
+                <h3>Recent Transactions</h3>
+                <div class="transaction-list">
+                    {% for transaction in current_user.transactions[-5:]|reverse %}
+                    <div class="transaction-item {{ transaction.transaction_type }}">
+                        <div class="transaction-info">
+                            <span class="type">{{ transaction.transaction_type|title }}</span>
+                            <span class="date">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                        </div>
+                        <div class="amount">
+                            {% if transaction.transaction_type == 'received' %}+{% else %}-{% endif %}
+                            ₹{{ "%.2f"|format(transaction.amount) }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="no-transactions">No recent transactions</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

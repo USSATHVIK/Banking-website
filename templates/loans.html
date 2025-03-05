@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loans - Rural Bank</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Rural Bank</div>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('transfer') }}">Transfer</a>
+                <a href="{{ url_for('loans') }}" class="active">Loans</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="loans-container">
+        <div class="container">
+            <h2>Loan Calculator</h2>
+
+            <div class="loan-calculator">
+                <form id="loan-form" class="calculator-form">
+                    <div class="form-group">
+                        <label for="principal">Loan Amount (₹)</label>
+                        <input type="number" id="principal" name="principal" required min="1000" step="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Interest Rate (% per year)</label>
+                        <input type="number" id="rate" name="rate" required min="1" max="30" step="0.1" value="10.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Loan Term (Years)</label>
+                        <input type="number" id="time" name="time" required min="1" max="30" step="1">
+                    </div>
+                    <button type="submit" class="btn primary">Calculate EMI</button>
+                </form>
+
+                <div id="loan-result" class="calculator-result" style="display: none;">
+                    <h3>Loan Details</h3>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <span class="label">Monthly EMI</span>
+                            <span class="value" id="emi-value">₹0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="label">Total Amount</span>
+                            <span class="value" id="total-value">₹0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="label">Interest Amount</span>
+                            <span class="value" id="interest-value">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loan-types">
+                <h3>Available Loan Types</h3>
+                <div class="loan-grid">
+                    <div class="loan-card">
+                        <h4>Agriculture Loan</h4>
+                        <p>Special loans for farmers with low interest rates</p>
+                        <ul>
+                            <li>Interest Rate: 7% p.a.</li>
+                            <li>Term: Up to 5 years</li>
+                            <li>Quick approval</li>
+                        </ul>
+                    </div>
+                    <div class="loan-card">
+                        <h4>Business Loan</h4>
+                        <p>Grow your rural business with our support</p>
+                        <ul>
+                            <li>Interest Rate: 10.5% p.a.</li>
+                            <li>Term: Up to 10 years</li>
+                            <li>Flexible repayment options</li>
+                        </ul>
+                    </div>
+                    <div class="loan-card">
+                        <h4>Education Loan</h4>
+                        <p>Invest in education for a better future</p>
+                        <ul>
+                            <li>Interest Rate: 8.5% p.a.</li>
+                            <li>Term: Up to 15 years</li>
+                            <li>Study now, pay later</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.getElementById('loan-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const principal = document.getElementById('principal').value;
+            const rate = document.getElementById('rate').value;
+            const time = document.getElementById('time').value;
+
+            fetch('/calculate_emi', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `principal=${principal}&rate=${rate}&time=${time}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('emi-value').textContent = `₹${data.emi}`;
+                document.getElementById('total-value').textContent = `₹${data.total_amount}`;
+                document.getElementById('interest-value').textContent = `₹${data.interest_amount}`;
+                document.getElementById('loan-result').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Failed to calculate EMI. Please try again.', 'error');
+            });
+        });
+    </script>
+</body>
+</html>

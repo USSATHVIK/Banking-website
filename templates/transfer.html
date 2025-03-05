@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Money - Rural Bank</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Rural Bank</div>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('transfer') }}" class="active">Transfer</a>
+                <a href="{{ url_for('loans') }}">Loans</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="transfer-container">
+        <div class="container">
+            <h2>Transfer Money</h2>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="transfer-box">
+                <div class="balance-info">
+                    <h3>Available Balance</h3>
+                    <p class="balance">₹{{ "%.2f"|format(current_user.balance) }}</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('transfer') }}" class="transfer-form">
+                    <div class="form-group">
+                        <label for="recipient_account">Recipient's Account Number</label>
+                        <input type="text" id="recipient_account" name="recipient_account" required 
+                               pattern="[0-9]{12}" title="Please enter a valid 12-digit account number">
+                        <small class="form-text">Enter the 12-digit account number of the recipient</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount (₹)</label>
+                        <input type="number" id="amount" name="amount" required min="1" 
+                               max="{{ current_user.balance }}" step="0.01">
+                    </div>
+                    <button type="submit" class="btn primary">Send Money</button>
+                </form>
+            </div>
+
+            <div class="transfer-tips">
+                <h3>Transfer Tips</h3>
+                <ul>
+                    <li>Double-check the recipient's account number before sending money</li>
+                    <li>Make sure you have sufficient balance for the transfer</li>
+                    <li>Keep your transaction receipt for future reference</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

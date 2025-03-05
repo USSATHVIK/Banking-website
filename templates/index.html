@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rural Bank - Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Rural Bank</div>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="active">Home</a>
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            </div>
+            <div class="language-toggle">
+                <button onclick="toggleLanguage('en')">English</button>
+                <button onclick="toggleLanguage('hi')">हिंदी</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container">
+            <h1>Welcome to Rural Bank</h1>
+            <p>Simple, Secure, and Reliable Banking for Everyone</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('login') }}" class="btn primary">Start Banking</a>
+                <a href="#features" class="btn secondary">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-section" id="features">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <img src="{{ url_for('static', filename='images/account-balance.png') }}" alt="Balance">
+                    <h3>Check Balance</h3>
+                    <p>View your account balance instantly</p>
+                </div>
+                <div class="feature-card">
+                    <img src="{{ url_for('static', filename='images/money.jpeg') }}" alt="Transfer">
+                    <h3>Money Transfer</h3>
+                    <p>Send money easily and securely</p>
+                </div>
+                <div class="feature-card">
+                    <img src="{{ url_for('static', filename='images/loan.jpg') }}" alt="Loan">
+                    <h3>Apply for Loan</h3>
+                    <p>Quick and hassle-free loan process</p>
+                </div>
+                <div class="feature-card">
+                    <img src="{{ url_for('static', filename='images/Service.jpeg') }}" alt="Support">
+                    <h3>24/7 Support</h3>
+                    <p>We're here to help you</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Rural Bank. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
